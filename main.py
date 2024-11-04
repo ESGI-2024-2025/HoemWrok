@@ -237,3 +237,12 @@ def post_update_homework(
         homeworks_file.write(json.dumps(homeworks))
         homeworks_file.close()
     return {"message": "Homework updated successfully"}
+
+
+@app.get("/list")
+def get_list_homeworks() -> Dict:
+    homeworks = []
+    with open(app_utils.calendar.get_config()["db_path"], "r") as homeworks_file:
+        homeworks = json.load(homeworks_file)
+        homeworks_file.close()
+    return {"homeworks": homeworks["homeworks"]}
