@@ -147,6 +147,9 @@ class AppUtils:
         self.calendar.generate_homeworks_calendar()
         return self.calendar.get_config()["file_path"]
 
+    def update_calendar(self) -> None:
+        self.calendar.generate_homeworks_calendar()
+
     def add_homework(self, homework: Homework) -> bool:
         homeworks = []
         with open(self.calendar.get_config()["db_path"], "r") as homeworks_file:
@@ -193,6 +196,7 @@ def post_add_homework(
         description=description,
     )
     if app_utils.add_homework(homework):
+        app_utils.update_calendar()
         return {"message": "Homework added successfully"}
     return {"message": "Error adding homework"}
 
@@ -209,6 +213,7 @@ def post_remove_homework(uid: int) -> Dict:
     with open(app_utils.calendar.get_config()["db_path"], "w") as homeworks_file:
         homeworks_file.write(json.dumps(homeworks))
         homeworks_file.close()
+    app_utils.update_calendar()
     return {"message": "Homework removed successfully"}
 
 
@@ -235,6 +240,7 @@ def post_update_homework(
     with open(app_utils.calendar.get_config()["db_path"], "w") as homeworks_file:
         homeworks_file.write(json.dumps(homeworks))
         homeworks_file.close()
+    app_utils.update_calendar()
     return {"message": "Homework updated successfully"}
 
 
