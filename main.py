@@ -168,17 +168,17 @@ app_utils = AppUtils()
 app = FastAPI()
 
 
-@app.get("/config")
-def read_root() -> Dict:
-    return {"config": app_utils.get_info()}
-
-
 @app.get("/")
 def read_homeworks() -> FileResponse:
     return FileResponse(
         app_utils.get_calendar(),
         media_type="text/calendar",
     )
+
+
+@app.get("/config")
+def read_config() -> Dict:
+    return {"config": app_utils.get_info()}
 
 
 @app.post("/add")
