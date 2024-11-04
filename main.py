@@ -195,8 +195,7 @@ def post_add_homework(
     )
     if app_utils.add_homework(homework):
         return {"message": "Homework added successfully"}
-    else:
-        return {"message": "Error adding homework"}
+    return {"message": "Error adding homework"}
 
 
 @app.post("/remove")
@@ -212,3 +211,29 @@ def post_remove_homework(uid: int) -> Dict:
         homeworks_file.write(json.dumps(homeworks))
         homeworks_file.close()
     return {"message": "Homework removed successfully"}
+
+
+@app.post("/update")
+def post_update_homework(
+    uid: int,
+    name: str,
+    due_date: str,
+    due_time: str,
+    priority: int,
+    description: str,
+) -> Dict:
+    homeworks = []
+    with open(app_utils.calendar.get_config()["db_path"], "r") as homeworks_file:
+        homeworks = json.load(homeworks_file)
+        homeworks_file.close()
+    for homework in homeworks["homeworks"]:
+        if homework["uid"] == uid:
+            homework["subject"] = name
+            homework["due_date"] = due_date
+            homework["due_time"] = due_time
+            homework["priority"] = priority
+            homework["description"] = description
+    with open(app_utils.calendar.get_config()["db_path"], "w") as homeworks_file:
+        homeworks_file.write(json.dumps(homeworks))
+        homeworks_file.close()
+    return {"message": "Homework updated successfully"}
