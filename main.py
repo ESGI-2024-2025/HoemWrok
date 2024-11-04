@@ -147,9 +147,6 @@ class AppUtils:
         self.calendar.generate_homeworks_calendar()
         return self.calendar.get_config()["file_path"]
 
-    def update_calendar(self) -> None:
-        self.calendar.generate_homeworks_calendar()
-
     def add_homework(self, homework: Homework) -> bool:
         homeworks = []
         with open(self.calendar.get_config()["db_path"], "r") as homeworks_file:
@@ -172,7 +169,6 @@ app = FastAPI()
 
 @app.get("/")
 def read_homeworks() -> FileResponse:
-    app_utils.update_calendar()
     return FileResponse(
         app_utils.get_calendar(),
         media_type="text/calendar",
