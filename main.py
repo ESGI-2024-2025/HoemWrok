@@ -172,6 +172,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_homeworks() -> FileResponse:
+    app_utils.update_calendar()
     return FileResponse(
         app_utils.get_calendar(),
         media_type="text/calendar",
@@ -196,7 +197,6 @@ def post_add_homework(
         description=description,
     )
     if app_utils.add_homework(homework):
-        app_utils.update_calendar()
         return {"message": "Homework added successfully"}
     return {"message": "Error adding homework"}
 
@@ -213,7 +213,6 @@ def post_remove_homework(uid: int) -> Dict:
     with open(app_utils.calendar.get_config()["db_path"], "w") as homeworks_file:
         homeworks_file.write(json.dumps(homeworks))
         homeworks_file.close()
-    app_utils.update_calendar()
     return {"message": "Homework removed successfully"}
 
 
@@ -240,7 +239,6 @@ def post_update_homework(
     with open(app_utils.calendar.get_config()["db_path"], "w") as homeworks_file:
         homeworks_file.write(json.dumps(homeworks))
         homeworks_file.close()
-    app_utils.update_calendar()
     return {"message": "Homework updated successfully"}
 
 
