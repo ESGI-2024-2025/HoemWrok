@@ -122,7 +122,6 @@ class Calendar:
 
     def generate_homeworks_calendar(self) -> str:
         for homework in self.load_homeworks():
-            print(homework)
             self.calendar.events.add(homework.format_to_event())
         with open(self.config["file_path"], "w") as calendar_file:
             calendar_file.writelines(self.calendar.serialize())
