@@ -1,4 +1,5 @@
 import json
+import uuid
 from datetime import timedelta
 from typing import Dict, List
 
@@ -12,7 +13,7 @@ class Homework:
     def __init__(
         self,
         uid: int,
-        subject: int,
+        subject: str,
         due_date: str,
         due_time: str,
         priority: int,
@@ -75,6 +76,17 @@ class Homework:
         )
         return event
 
+    def format_to_json(self) -> Dict:
+        json_obj = {
+            "uid": self.uid,
+            "subject": self.subject,
+            "due_date": self.due_date,
+            "due_time": self.due_time,
+            "priority": self.priority,
+            "description": self.description,
+        }
+        return json_obj
+
 
 class Calendar:
 
@@ -136,20 +148,52 @@ class AppUtils:
         self.calendar.generate_homeworks_calendar()
         return self.calendar.get_config()["file_path"]
 
+    def add_homework(self, homework: Homework) -> bool:
+        homeworks = []
+        with open(self.calendar.get_config()["db_path"], "r") as homeworks_file:
+            homeworks = json.load(homeworks_file)
+            homeworks_file.close()
+
+        homeworks["homeworks"].append(homework.format_to_json())
+
+        with open(self.calendar.get_config()["db_path"], "w") as homeworks_file:
+            homeworks_file.write(json.dumps(homeworks))
+            homeworks_file.close()
+
+        return True
+
 
 app_utils = AppUtils()
 
 app = FastAPI()
 
 
-@app.get("/")
+@app.get("/config")
 def read_root() -> Dict:
     return {"config": app_utils.get_info()}
 
 
-@app.get("/calendar/")
-def read_calendar() -> FileResponse:
+@app.get("/")
+def read_homeworks() -> FileResponse:
     return FileResponse(
         app_utils.get_calendar(),
         media_type="text/calendar",
     )
+
+
+@app.post("/add")
+def post_add_homework(
+    name: str, due_date: str, due_time: str, priority: int, description: str
+) -> Dict:
+    homework = Homework(
+        uid=uuid.uuid4().int,
+        subject=name,
+        due_date=due_date,
+        due_time=due_time,
+        priority=priority,
+        description=description,
+    )
+    if app_utils.add_homework(homework):
+        return {"message": "Homework added successfully"}
+    else:
+        return {"message": "Error adding homework"}
