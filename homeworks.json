@@ -1,0 +1,28 @@
+{
+  "homeworks": [
+    {
+      "uid": 1,
+      "subject": "Math",
+      "due_date": "2024-11-05",
+      "due_time": "17:00:00",
+      "priority": 3,
+      "description": "Page 3-5"
+    },
+    {
+      "uid": 2,
+      "subject": "Anglais",
+      "due_date": "2024-11-06",
+      "due_time": "14:00:00",
+      "priority": 2,
+      "description": "Complete the text"
+    },
+    {
+      "uid": 3,
+      "subject": "Arts Plastiques",
+      "due_date": "2024-11-06",
+      "due_time": "08:30:00",
+      "priority": 1,
+      "description": "Page 5-7"
+    }
+  ]
+}

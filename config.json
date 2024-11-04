@@ -1,0 +1,12 @@
+{
+  "name": "HoemWrok",
+  "version": "0.0.1",
+  "description": "HoemWrok is a simple homework tracker",
+  "author": "cleeryy",
+  "devPage": "",
+
+  "calendar": {
+    "file_path": "calendar.ics",
+    "db_path": "homeworks.json"
+  }
+}
