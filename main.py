@@ -105,6 +105,7 @@ class Calendar:
         return self.config
 
     def load_homeworks(self) -> List[Homework]:
+        self.homeworks = []
         with open(self.config["db_path"], "r") as homeworks_file:
             for homework in json.load(homeworks_file)["homeworks"]:
                 self.homeworks.append(
